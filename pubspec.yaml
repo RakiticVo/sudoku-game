@@ -1,12 +1,22 @@
-﻿name: sudoku_game
+name: sudoku_game
 version: 0.1.0
-description: Pure Dart Sudoku engine and app state primitives.
+description: Sudoku Flutter app with integrated game logic and app state.
+publish_to: 'none'
+
 environment:
   sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
+  flutter:
+    sdk: flutter
   collection: ^1.18.0
+  cupertino_icons: ^1.0.8
 
 dev_dependencies:
-  lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
   test: ^1.25.8
+
+flutter:
+  uses-material-design: true

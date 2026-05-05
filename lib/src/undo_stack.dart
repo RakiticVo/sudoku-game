@@ -8,6 +8,8 @@
 }
 
 class UndoStack {
+  UndoStack();
+
   final List<MoveAction> _undo = <MoveAction>[];
   final List<MoveAction> _redo = <MoveAction>[];
 
