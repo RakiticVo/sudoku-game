@@ -66,7 +66,7 @@ void main() {
     final storage = PreferencesSessionStorage(
       key: 'sudoku_session',
       setString: (key, value) async => store[key] = value,
-      getString: (key) async => store[key],
+      getString: (key) => store[key],
       remove: (key) async => store.remove(key),
     );
 

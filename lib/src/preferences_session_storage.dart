@@ -1,7 +1,7 @@
 import 'session_storage.dart';
 
 typedef SetStringValue = Future<void> Function(String key, String value);
-typedef GetStringValue = Future<String?> Function(String key);
+typedef GetStringValue = String? Function(String key);
 typedef RemoveValue = Future<void> Function(String key);
 
 /// Key-value backed storage for Sudoku sessions.
@@ -24,7 +24,7 @@ class PreferencesSessionStorage implements SessionStorage {
   Future<void> save(String payload) => setString(key, payload);
 
   @override
-  Future<String?> load() => getString(key);
+  Future<String?> load() => Future.value(getString(key));
 
   @override
   Future<void> clear() => remove(key);
