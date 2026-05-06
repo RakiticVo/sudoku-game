@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sudoku_game/sudoku_game.dart';
 
 void main() {
@@ -32,6 +33,8 @@ class SudokuPage extends StatefulWidget {
 class _SudokuPageState extends State<SudokuPage> {
   late SudokuStateController _controller;
   late SudokuAppState _state;
+  late SharedPreferences _preferences;
+  bool _isInitializing = true;
   Timer? _ticker;
 
   int? _selectedRow;
@@ -42,14 +45,10 @@ class _SudokuPageState extends State<SudokuPage> {
     super.initState();
     _controller = SudokuStateController.newGame(
       SudokuDifficulty.medium,
-      storage: FileSessionStorage(filePath: '.sudoku_session.json'),
+      storage: InMemorySessionStorage(),
     );
     _state = _controller.state;
-    _controller.addListener(_onStateChanged);
-    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
-      _controller.tick();
-    });
-    unawaited(_controller.restore());
+    unawaited(_initializeController());
   }
 
   @override
@@ -64,12 +63,40 @@ class _SudokuPageState extends State<SudokuPage> {
     setState(() => _state = next);
   }
 
+  SessionStorage _storage() => PreferencesSessionStorage(
+        key: 'sudoku_session',
+        setString: _preferences.setString,
+        getString: _preferences.getString,
+        remove: _preferences.remove,
+      );
+
+  Future<void> _initializeController() async {
+    _preferences = await SharedPreferences.getInstance();
+    _controller.removeListener(_onStateChanged);
+    _controller = SudokuStateController.newGame(
+      SudokuDifficulty.medium,
+      storage: _storage(),
+    );
+    _state = _controller.state;
+    _controller.addListener(_onStateChanged);
+    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
+      _controller.tick();
+    });
+    await _controller.restore();
+    if (!mounted) return;
+    setState(() {
+      _state = _controller.state;
+      _isInitializing = false;
+    });
+  }
+
   Future<void> _newGame(SudokuDifficulty difficulty) async {
+    if (_isInitializing) return;
     final old = _controller;
     old.removeListener(_onStateChanged);
     _controller = SudokuStateController.newGame(
       difficulty,
-      storage: FileSessionStorage(filePath: '.sudoku_session.json'),
+      storage: _storage(),
     );
     _controller.addListener(_onStateChanged);
     setState(() {
@@ -88,6 +115,11 @@ class _SudokuPageState extends State<SudokuPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isInitializing) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     final title = 'Sudoku (${_state.difficulty.name})';
     return Scaffold(
       appBar: AppBar(
