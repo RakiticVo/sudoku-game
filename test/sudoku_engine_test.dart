@@ -15,7 +15,7 @@ void main() {
       3, 4, 5, 2, 8, 6, 1, 7, 9,
     ];
     final session = SudokuSession.fromJsonString(
-      '{"board":{"givens":$solved,"entries":$solved},"difficulty":"easy","elapsedSeconds":12,"undo":{"undos":[],"redos":[]}}',
+      '{"board":{"givens":$solved,"entries":$solved},"difficulty":"easy","elapsedSeconds":12,"undo":{"undo":[],"redo":[]}}',
     );
 
     expect(session.isComplete, isTrue);
