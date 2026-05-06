@@ -42,7 +42,7 @@ class _SudokuPageState extends State<SudokuPage> {
     super.initState();
     _controller = SudokuStateController.newGame(
       SudokuDifficulty.medium,
-      storage: FileSessionStorage(filePath: '.sudoku_session.json'),
+      storage: PreferencesSessionStorage.instance(),
     );
     _state = _controller.state;
     _controller.addListener(_onStateChanged);
@@ -69,7 +69,7 @@ class _SudokuPageState extends State<SudokuPage> {
     old.removeListener(_onStateChanged);
     _controller = SudokuStateController.newGame(
       difficulty,
-      storage: FileSessionStorage(filePath: '.sudoku_session.json'),
+      storage: PreferencesSessionStorage.instance(),
     );
     _controller.addListener(_onStateChanged);
     setState(() {
