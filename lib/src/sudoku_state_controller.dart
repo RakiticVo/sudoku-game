@@ -52,8 +52,11 @@ class SudokuStateController {
   }
 
   void tick([int seconds = 1]) {
+    final before = _session.elapsedSeconds;
     _session.tick(seconds);
-    _emit();
+    if (_session.elapsedSeconds != before) {
+      _emit();
+    }
   }
 
   Future<void> save() async {

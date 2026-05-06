@@ -61,6 +61,7 @@ class SudokuSession {
     if (seconds < 0) {
       throw ArgumentError('seconds must be >= 0');
     }
+    if (isComplete) return;
     elapsedSeconds += seconds;
   }
 

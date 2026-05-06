@@ -1,6 +1,6 @@
 ﻿library sudoku_game;
 
-export 'src/file_session_storage.dart';
+export 'src/preferences_session_storage.dart';
 export 'src/session_storage.dart';
 export 'src/sudoku_app_state.dart';
 export 'src/sudoku_board.dart';
