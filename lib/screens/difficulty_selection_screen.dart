@@ -27,16 +27,16 @@ class DifficultySelectionScreen extends StatelessWidget {
                   child: isWide
                       ? Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: const [
-                            Expanded(flex: 7, child: _DifficultyHero()),
+                          children: [
+                            Expanded(flex: 7, child: _DifficultyHero(startingDifficulty: startingDifficulty)),
                             SizedBox(width: 24),
                             SizedBox(width: 360, child: _DifficultyRail()),
                           ],
                         )
-                      : const ListView(
+                      : ListView(
                           padding: EdgeInsets.zero,
                           children: [
-                            _DifficultyHero(),
+                            _DifficultyHero(startingDifficulty: startingDifficulty),
                             SizedBox(height: 18),
                             _DifficultyRail(),
                           ],
@@ -52,7 +52,9 @@ class DifficultySelectionScreen extends StatelessWidget {
 }
 
 class _DifficultyHero extends StatelessWidget {
-  const _DifficultyHero();
+  const _DifficultyHero({required this.startingDifficulty});
+
+  final SudokuDifficulty? startingDifficulty;
 
   @override
   Widget build(BuildContext context) {
