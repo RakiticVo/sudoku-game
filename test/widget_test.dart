@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:sudoku_game/app/sudoku_game_app.dart';
-import 'package:sudoku_game/widgets/sudoku_board.dart';
-import 'package:sudoku_game/widgets/sudoku_keypad.dart';
 
 void main() {
-  testWidgets('renders sudoku shell', (WidgetTester tester) async {
+  testWidgets('renders the four-screen sudoku flow', (WidgetTester tester) async {
     await tester.binding.setSurfaceSize(const Size(1400, 1100));
     addTearDown(() async => tester.binding.setSurfaceSize(null));
 
@@ -16,15 +14,25 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Sudoku Game'), findsWidgets);
-    expect(
-      find.text(
-        'Runnable Flutter UI shell with a focused board, keypad, and room for solver logic.',
-      ),
-      findsWidgets,
-    );
-    expect(find.text('Session'), findsOneWidget);
-    expect(find.text('Controls'), findsOneWidget);
-    expect(find.byType(SudokuBoard), findsOneWidget);
-    expect(find.byType(SudokuKeypad), findsOneWidget);
+    expect(find.text('Play'), findsOneWidget);
+
+    await tester.tap(find.text('Play'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Select difficulty'), findsOneWidget);
+    expect(find.text('Easy'), findsWidgets);
+
+    await tester.tap(find.text('Start').first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Centered board, compact controls, and clear puzzle state for focused play.'), findsWidgets);
+    expect(find.text('Complete puzzle'), findsOneWidget);
+
+    await tester.tap(find.text('Complete puzzle'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Puzzle complete'), findsOneWidget);
+    expect(find.text('Play again'), findsOneWidget);
+    expect(find.text('Main menu'), findsOneWidget);
   });
 }
